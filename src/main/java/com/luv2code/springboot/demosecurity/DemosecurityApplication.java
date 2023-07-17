@@ -1,13 +1,13 @@
-package com.iqbal.springthymeleafsecurity;
+package com.luv2code.springboot.demosecurity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringThymeleafSecurityApplication {
+public class DemosecurityApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringThymeleafSecurityApplication.class, args);
+		SpringApplication.run(DemosecurityApplication.class, args);
 	}
 
 }
