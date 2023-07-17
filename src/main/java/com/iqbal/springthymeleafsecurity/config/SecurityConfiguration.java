@@ -1,37 +1,29 @@
 package com.iqbal.springthymeleafsecurity.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfiguration {
 
         @Bean
-        public InMemoryUserDetailsManager inmemoryUserDetailsManager() {
-                UserDetails admin = User.builder()
-                                .username("admin")
-                                .password("{noop}admin")
-                                .roles("ADMIN")
-                                .build();
+        public UserDetailsManager userDetailsManager(DataSource datasource) {
+                JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(datasource);
+                jdbcUserDetailsManager.setUsersByUsernameQuery(
+                                "select user_id, pw, active from members where user_id=?");
+                jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
+                                "select user_id, role from roles where user_id=?");
 
-                UserDetails iqbal = User.builder()
-                                .username("iqbal")
-                                .password("{noop}iqbal")
-                                .roles("ADMIN", "USER")
-                                .build();
-
-                UserDetails john = User.builder()
-                                .username("john")
-                                .password("{noop}john")
-                                .roles("USER")
-                                .build();
-
-                return new InMemoryUserDetailsManager(admin, iqbal, john);
+                return jdbcUserDetailsManager;
         }
 
         @Bean
